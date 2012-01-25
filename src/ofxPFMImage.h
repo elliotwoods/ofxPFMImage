@@ -9,7 +9,6 @@ using namespace std;
 
 class ofxPFMImage : public ofFloatImage {
 public:
-	
-		bool 	loadPFMImage(string fileName);
-		void	savePFMImage(string filename);
+	bool 	loadPFMImage(string fileName);
+	void	savePFMImage(string filename);
 };

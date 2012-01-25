@@ -6,7 +6,7 @@ bool ofxPFMImage::loadPFMImage(string fileName) {
 
 	ofFile file(fileName, ofFile::ReadOnly, true);
 
-	ofLogNotice() << "ofxPFMImage::loadPFMImage(" << fileName << ") : file size is " << file.getSize();
+	ofLogWarning() << "ofxPFMImage::loadPFMImage(" << fileName << ") : file size is " << file.getSize();
 	char lineBuffer[2048];
 	
 	try {
@@ -46,6 +46,7 @@ bool ofxPFMImage::loadPFMImage(string fileName) {
 		line = istringstream(lineBuffer);
 
 		line >> scale;
+		scale = abs(scale);
 
 		/**HACK**/
 		//for the time being we ignore endianness
@@ -55,12 +56,17 @@ bool ofxPFMImage::loadPFMImage(string fileName) {
 		////
 		//BODY
 		float* pix = this->getPixels();
-		const int count = width * height * (colour ? 3 : 1);
-		
-		file.read((char*) pix, count * sizeof(float));
+		float value;
+
+		while (!file.eof()) {
+			file.read((char*)&value, sizeof(float));
+			*pix++ = value * scale;
+		}
+
 		//
 		////
 
+		this->update();
 		return true;
 
 	} catch (...) {
