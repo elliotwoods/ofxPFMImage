@@ -1,5 +1,5 @@
 # Introduction
-Really simple way of loading and saving PFM image format files into an ofFloatImage
+Really simple code for loading and saving PFM image format files into an ofFloatImage
 
 # Usage
 `ofPFMImage` extends `ofFloatImage`
