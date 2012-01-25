@@ -3,10 +3,12 @@
 //http://netpbm.sourceforge.net/doc/pfm.html
 
 bool ofxPFMImage::loadPFMImage(string fileName) {
+
 	ofFile file(fileName, ofFile::ReadOnly, true);
 
+	ofLogNotice() << "ofxPFMImage::loadPFMImage(" << fileName << ") : file size is " << file.getSize();
 	char lineBuffer[2048];
-
+	
 	try {
 		////
 		//HEADER line 1
@@ -20,7 +22,7 @@ bool ofxPFMImage::loadPFMImage(string fileName) {
 			throw(0);
 		//
 		////
-
+		
 		////
 		//HEADER line 2
 		file.getline(lineBuffer, 2048);
@@ -53,12 +55,13 @@ bool ofxPFMImage::loadPFMImage(string fileName) {
 		////
 		//BODY
 		float* pix = this->getPixels();
-		const int count = width*height * (colour ? 3 : 1);
+		const int count = width * height * (colour ? 3 : 1);
 		
-		for (int i=0; i<count; ++i, pix++)
-			file.read((char*) pix, 4);
+		file.read((char*) pix, count * sizeof(float));
 		//
 		////
+
+		return true;
 
 	} catch (...) {
 		this->pixels.clear();
@@ -84,7 +87,7 @@ void ofxPFMImage::savePFMImage(string filename) {
 		colour = true;
 		break;
 	default:
-		ofLogError() << "ofxPFMImage::savePFMImage - cannot save this image as it doesn't have either 1 or 3 channels");
+		ofLogError() << "ofxPFMImage::savePFMImage - cannot save this image as it doesn't have either 1 or 3 channels";
 		return;
 		break;
 	}
