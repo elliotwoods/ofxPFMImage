@@ -4,9 +4,9 @@
 
 bool ofxPFMImage::loadPFMImage(string fileName) {
 
-	ofFile file(fileName, ofFile::ReadOnly, true);
+	ifstream file;
+	file.open(ofToDataPath(fileName, true), ios::binary | ios::in);
 
-	ofLogWarning() << "ofxPFMImage::loadPFMImage(" << fileName << ") : file size is " << file.getSize();
 	char lineBuffer[2048];
 	
 	try {
@@ -57,12 +57,13 @@ bool ofxPFMImage::loadPFMImage(string fileName) {
 		//BODY
 		float* pix = this->getPixels();
 		float value;
-
-		while (!file.eof()) {
+				
+		int expectedPixels = this->getWidth() * this->getHeight() * this->getPixelsRef().getNumChannels();
+		
+		for (int i=0; i<expectedPixels; i++) {
 			file.read((char*)&value, sizeof(float));
 			*pix++ = value * scale;
 		}
-
 		//
 		////
 
